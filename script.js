@@ -7,51 +7,42 @@ const password2 = document.getElementById("password2");
 // Show input error message
 function showError(input, message) {
   const formControl = input.parentElement;
-  formControl.className = 'form-control error';
-  const small = formControl.querySelector('small');
+  formControl.className = "form-control error";
+  const small = formControl.querySelector("small");
   small.innerText = message;
 }
 
 // Show success outline
 function showSuccess(input) {
   const formControl = input.parentElement;
-  formControl.className = 'form-control success';
+  formControl.className = "form-control success";
 }
 
 // Check email is valid
 function isValidEmail(email) {
- const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
+}
+
+// Check required fields
+function checkRequired(inputArr) {
+  inputArr.forEach(function (input) {
+    if (input.value.trim() === "") {
+      showError(input, `${getFieldName(input)} is required`);
+    } else {
+      showSuccess(input);
+    }
+  });
+}
+
+// Get fieldname
+function getFieldName(input) {
+  return input.id.charAt(0).toUpperCase() + input.id.slice(1);
 }
 
 // Event Listeners
 form.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  if (username.value === "") {
-    showError(username, "username is required");
-  } else {
-    showSuccess(username);
-  }
-
-  if (email.value === "") {
-    showError(email, "email is required");
-  } else if(!isValidEmail(email.value)) {
-    showError(email, "email is not valid");
-  
-  } else {
-    showSuccess(email);
-  }
-
-  if (password.value === "") {
-    showError(password, "password is required");
-  } else {
-    showSuccess(password);
-  }
-
-  if (password2.value === "") {
-    showError(password2, "password 2 is required");
-  } else {
-    showSuccess(password2);
-  }
+  checkRequired([username, email, password, password2]);
 });
